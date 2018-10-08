@@ -45,9 +45,10 @@ EOF
        -e "s:^;date.timezone =.*:date.timezone = \"${timezone}\":g" \
        -i /etc/php/7.0/apache2/php.ini
 
-  cat <<EOF | sudo mysql -uroot -p${MYSQL_PASSWD}
-create database zabbix character set utf8 collate utf8_bin;
-grant all privileges on zabbix.* to "zabbix"@"localhost" identified by "${ZABBIX_PASSWD}";
+  cat <<EOF | mysql -uroot -p${MYSQL_PASSWD}
+create database zabbix character set utf8 collate utf8_bin; create user zabbix@localhost identified by '${ZABBIX_PASSWD}';
+grant all privileges on zabbix.* to "\""zabbix\""@"\"localhost"\"" identified by '${ZABBIX_PASSWD}';
+flush privileges;
 exit
 EOF
 
