@@ -22,6 +22,8 @@ apt update
 
 # Versão 8.0 do MySQL
 MYSQL_VERSION=8.0
+MYSQL_PASSWD=123456 # ALTERE ESSA SENHA!!
+ZABBIX_PASSWD=zabbix # ALTERE ESSA SENHA!!
 [ -z "${MYSQL_PASSWD}" ] && MYSQL_PASSWD=mysql
 [ -z "${ZABBIX_PASSWD}" ] && ZABBIX_PASSWD=zabbix
 
@@ -43,9 +45,7 @@ EOF
        -e "s:^;date.timezone =.*:date.timezone = \"${timezone}\":g" \
        -i /etc/php/7.0/apache2/php.ini
 
-  cat <<EOF | sudo mysql -uroot -p${MYSQL_PASSWD}
-create database zabbix character set utf8 collate utf8_bin;
-grant all privileges on zabbix.* to zabbix@localhost identified by '${ZABBIX_PASSWD}';
+  cat <<EOF | sudo mysql -uroot -p${MYSQL_PASSWD} create database zabbix character set utf8 collate utf8_bin; grant all privileges on zabbix.* to zabbix@localhost identified by '${ZABBIX_PASSWD}';
 exit
 EOF
 
