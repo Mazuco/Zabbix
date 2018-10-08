@@ -1,2 +1,2 @@
 # Zabbix
-Configuração do Apache
+Arquivos diversos usados no curso de Zabbix 
