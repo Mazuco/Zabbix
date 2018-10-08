@@ -4,6 +4,8 @@
 # Contato: contato@vmzsolutions.com.br
 # Data: 08/10/2018
 
+
+# Instalando os repositórios atuais:
 apt-get install sudo -y 
 
 set -e
@@ -23,6 +25,7 @@ MYSQL_VERSION=8.0
 [ -z "${MYSQL_PASSWD}" ] && MYSQL_PASSWD=mysql
 [ -z "${ZABBIX_PASSWD}" ] && ZABBIX_PASSWD=zabbix
 
+# Bloco de instalação do Zabbix 4.0 com MySQL 8.x
 zabbix_server_install()
 {
   cat <<EOF | sudo debconf-set-selections mysql-server-${MYSQL_VERSION} mysql-server/root_password password ${MYSQL_PASSWD} mysql-server-${MYSQL_VERSION} mysql-server/root_password_again password ${MYSQL_PASSWD} 
@@ -30,7 +33,7 @@ EOF
 
   sudo apt install -y zabbix-server-mysql zabbix-frontend-php php-mysql libapache2-mod-php vim
 
-  sudo cp /usr/share/doc/zabbix-frontend-php/examples/apache.conf /etc/apache2/conf-available/zabbix-frontend-php.conf
+  sudo cp -R /usr/share/zabbix/ /etc/apache2/conf-available/zabbix-frontend-php.conf
   sudo a2enconf zabbix-frontend-php
 
   timezone=$(cat /etc/timezone)
@@ -58,7 +61,7 @@ EOF
   # Pula a etapa do setup.php do Zabbix
   cat <<EOF | sudo tee /etc/zabbix/zabbix.conf.php
 <?php
-// Zabbix GUI configuration file.
+// Arquivo de configuração do Zabbix.
 global \$DB;
 
 \$DB['TYPE']     = 'MYSQL';
