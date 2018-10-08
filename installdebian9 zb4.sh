@@ -46,16 +46,15 @@ EOF
        -i /etc/php/7.0/apache2/php.ini
 
   cat <<EOF | mysql -uroot -p${MYSQL_PASSWD}
-create database zabbix character set utf8 collate utf8_bin; create user zabbix@localhost identified by '${ZABBIX_PASSWD}';
-grant all privileges on zabbix.* to "\""zabbix\""@"\"localhost"\"" identified by '${ZABBIX_PASSWD}';
+create database zabbix character set utf8 collate utf8_bin;
+use mysql;
+create user 'zabbix'@'localhost' identified by '${ZABBIX_PASSWD}';
+GRANT ALL ON zabbix.* to 'zabbix'@'localhost';
 flush privileges;
 exit
 EOF
 
-  for sql in schema.sql.gz images.sql.gz data.sql.gz; do
-    zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz | \
-      sudo mysql -uzabbix -p${ZABBIX_PASSWD} zabbix;
-  done
+  zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz |mysql -uroot -p${MYSQL_PASSWD} zabbix;
 
   sudo sed -e 's/# ListenPort=.*/ListenPort=10051/g' \
        -e "s/# DBPassword=.*/DBPassword=${ZABBIX_PASSWD}/g" \
