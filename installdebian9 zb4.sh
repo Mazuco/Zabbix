@@ -50,7 +50,7 @@ exit
 EOF
 
   for sql in schema.sql.gz images.sql.gz data.sql.gz; do
-    zcat /usr/share/zabbix-server-mysql/"${sql}" | \
+    zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz | \
       sudo mysql -uzabbix -p${ZABBIX_PASSWD} zabbix;
   done
 
