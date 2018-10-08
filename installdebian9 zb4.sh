@@ -35,7 +35,6 @@ EOF
 
   sudo apt install -y zabbix-server-mysql zabbix-frontend-php php-mysql libapache2-mod-php vim
 
-  sudo cp -R /usr/share/zabbix/ /etc/apache2/conf-available/zabbix-frontend-php.conf
   sudo a2enconf zabbix-frontend-php
 
   timezone=$(cat /etc/timezone)
