@@ -33,7 +33,7 @@ zabbix_server_install()
   cat <<EOF | sudo debconf-set-selections mysql-server-${MYSQL_VERSION} mysql-server/root_password password ${MYSQL_PASSWD} mysql-server-${MYSQL_VERSION} mysql-server/root_password_again password ${MYSQL_PASSWD} 
 EOF
 
-  sudo apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-agent php-mysql libapache2-mod-php vim
+  sudo apt install -y zabbix-server-mysql zabbix-frontend-php php-mysql libapache2-mod-php vim
 
   #sudo a2enconf zabbix-frontend-php
 
