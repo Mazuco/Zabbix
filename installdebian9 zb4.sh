@@ -97,6 +97,7 @@ zabbix_agent_install()
   sudo apt install -y zabbix-agent
   sudo sed -e "s/^Hostname=.*/Hostname=localhost/g" \
        -i /etc/zabbix/zabbix_agentd.conf
+  systemctl enable zabbix-agent
 }
 
 zabbix_main()
