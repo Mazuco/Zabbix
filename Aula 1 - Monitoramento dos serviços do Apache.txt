@@ -1,0 +1,50 @@
+// Aula 1 - Monitoramento dos serviços do Apache.txt
+
+➔ # cd /usr/lib/zabbix/externalscripts
+➔ # wget https://raw.githubusercontent.com/Mazuco/Zabbix/master/apache.sh
+➔ # vim apache.sh
+➔ # chmod +x apache.sh
+➔ # chmod 777 /usr/lib/zabbix/externalscripts/apache.sh
+➔ # chmod 777 /tmp/apache_status
+
+➔ vim /etc/apache2/mods-available/status.conf
+
+<Location /server-status>
+SetHandler server-status
+Require local
+#Require ip 192.168.0.0/24
+</Location>
+
+Agora, vamos alterar o nosso arquivo zabbix_agentd.conf:
+
+➔ vim /etc/zabbix/zabbix_agentd.conf
+
+# Monitoramento Apache
+
+	UserParameter=apache[*],/usr/lib/zabbix/externalscripts/apache.sh '$1'
+
+
+➔ # service zabbix-agent restart
+➔ # service apache2 restart
+
+➔ Vá em Configurações > Templates
+➔ E importe o template "zbx_template_apache.xml"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
