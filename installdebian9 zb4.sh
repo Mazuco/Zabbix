@@ -10,13 +10,13 @@ apt-get install sudo -y
 
 set -e
 
+wget http://repo.mysql.com/mysql-apt-config_0.8.13-1_all.deb
+
+dpkg -i mysql-apt-config_0.8.13-1_all.deb
+
 wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-2+stretch_all.deb
 
 dpkg -i zabbix-release_4.0-2+stretch_all.deb
-
-wget http://repo.mysql.com/mysql-apt-config_0.8.10-1_all.deb
-
-dpkg -i mysql-apt-config_0.8.10-1_all.deb
 
 apt update
 
