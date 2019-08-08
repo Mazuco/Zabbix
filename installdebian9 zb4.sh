@@ -14,6 +14,10 @@ wget http://repo.mysql.com/mysql-apt-config_0.8.13-1_all.deb
 
 dpkg -i mysql-apt-config_0.8.13-1_all.deb
 
+apt-key adv --keyserver keys.gnupg.net --recv-keys 8C718D3B5072E1F5
+
+apt update
+
 wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-2+stretch_all.deb
 
 dpkg -i zabbix-release_4.0-2+stretch_all.deb
