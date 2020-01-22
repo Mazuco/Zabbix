@@ -1,6 +1,6 @@
 #!/bin/bash
 #################### SCRIPT PARA A DESCOBERTA DE SISTEMAS DE ARQUIVOS ####################
-# Vitor Mazuco <contato@vmzsolutions.com.br>                             #
+# Modificado por Vitor Mazuco <contato@vmzsolutions.com.br>                             #
 # Created Jun, 2017 
 
 usage() {
@@ -51,3 +51,5 @@ echo
 echo ']}'
 
 IFS=$OldIFS
+
+# Esse código foi publicado originalmete pelo @Janssen dos Reis Lima
