@@ -110,3 +110,5 @@ if [ "$resposta" -ne 0 ]; then
 fi
 
 exit $resposta
+
+# Esse código foi publicado originalmete pelo @Janssen dos Reis Lima
