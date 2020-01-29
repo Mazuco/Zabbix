@@ -1,8 +1,7 @@
 #!/bin/bash
-
-
-# Modificado por Vitor Mazuco                                                                        
-# Data atualizacao: 
+# Modificado por Vitor Mazuco -
+# Esse código foi publicado originalmete pelo https://github.com/janssenlima/scripts-zabbix/blob/master/apache/apache.sh                                                                   
+# Data da última atualizacao: 
 # 12/03/2018                                                                        
 # Changelog:                                                                                          
 #   - Alteração da variável "tmp"                                                                     
@@ -110,5 +109,3 @@ if [ "$resposta" -ne 0 ]; then
 fi
 
 exit $resposta
-
-# Esse código foi publicado originalmete pelo @Janssen dos Reis Lima
