@@ -52,4 +52,4 @@ echo ']}'
 
 IFS=$OldIFS
 
-# Esse código foi publicado originalmete pelo @Janssen dos Reis Lima
+# Esse código foi publicado originalmete em: https://github.com/janssenlima/scripts-zabbix/blob/master/port-scan/tcp-port-scan-lld.sh
