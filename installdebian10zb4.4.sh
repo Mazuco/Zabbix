@@ -6,7 +6,7 @@
 # Data: 08/08/2019
 
 # Instalando os repositórios atuais:
-apt-get install sudo -y 
+apt-get install sudo gnupg -y 
 
 set -e
 
