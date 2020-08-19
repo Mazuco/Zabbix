@@ -20,6 +20,8 @@ apt update
 
 wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1%2Bbuster_all.deb
 
+apt install -y mysql-community-server 
+
 dpkg -i zabbix-release_5.0-1+buster_all.deb 
 
 apt update
