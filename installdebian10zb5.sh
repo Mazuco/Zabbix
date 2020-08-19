@@ -5,6 +5,9 @@
 # Contato: contato@vmzsolutions.com.br
 # Data: 12/05/2020
 
+# Correção de PATH
+export PATH="/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/games"
+
 # Instalando os repositórios atuais:
 apt-get install sudo gnupg -y 
 
@@ -99,8 +102,8 @@ EOF
 
 zabbix_agent_install()
 {
-  # This Hostname is used for Host name in
-  # Configuration -> Hosts -> Create Host.
+# Este nome de host é usado para o nome de host em
+# Configuração -> Hosts -> Criar Host.
   sudo apt install -y zabbix-agent
   sudo sed -e "s/^Hostname=.*/Hostname=localhost/g" \
        -i /etc/zabbix/zabbix_agentd.conf
