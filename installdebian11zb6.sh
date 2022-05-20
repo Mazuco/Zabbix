@@ -10,7 +10,7 @@ export PATH="/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/g
 
 rm /etc/apt/sources.list
 
-cat <<EOF | sudo tee /etc/apt/sources.list
+cat <<EOF | tee /etc/apt/sources.list
 deb http://deb.debian.org/debian/ bullseye main non-free contrib
 # deb-src http://deb.debian.org/debian/ bullseye main non-free contrib
 
