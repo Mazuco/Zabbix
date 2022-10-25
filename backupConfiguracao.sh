@@ -46,18 +46,3 @@ TIME="+10"
 find /backup/mysql -name "*.bz2" -ctime +10 -exec rm {} \;
 
 exit 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
