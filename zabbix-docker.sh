@@ -1,18 +1,18 @@
 #!/bin/bash
 
-'''
-Instalação rápida do Zabbix no Docker em sistemas Rocky Linux 9
+####
+## Instalação rápida do Zabbix no Docker em sistemas Rocky Linux 9
 
-Setup de instalação:
+## Setup de instalação:
 
-* Rocky Linux 9 S.O principal
-* Docker com Linux Alpine
-* Docker Zabbix 7.0 LTS
-* Docker Banco de dados PostgreSQL 16
-* Docker Servidor Web Ngnix
+## * Rocky Linux 9 S.O principal
+## * Docker com Linux Alpine
+## * Docker Zabbix 7.0 LTS
+## * Docker Banco de dados PostgreSQL 16
+## * Docker Servidor Web Ngnix
 
-Troque as variaveis DB_SERVER_HOST e ZBX_PASSIVESERVERS para o seu IP ou Hostname!
-'''
+## Troque as variaveis DB_SERVER_HOST e ZBX_PASSIVESERVERS para o seu IP ou Hostname!
+
 
 # Configurações de SElinux e FirewallD:
 
