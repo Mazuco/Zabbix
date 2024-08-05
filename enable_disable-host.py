@@ -3,7 +3,6 @@
 #
 # Autor original: Opensource ICT Solutions B.V - license by GPL-3.0 
 # Alteração feita por Vitor Mazuco
-# https://github.com/Mazuco/Zabbix/blob/master/enable_disable-host.py
 #
 # 05-08-2024
 
@@ -11,107 +10,127 @@ import sys
 import requests
 import json
 import os
-import time
 
-url = 'http://SEUIP/zabbix/api_jsonrpc.php?' # altere conforme a sua URL!!
-token = "PUT_YOUR_TOKEN_HERE"  # coloque o seu TOKEN de acesso!
+url = 'http://192.168.15.163/zabbix/api_jsonrpc.php?' # altere conforme a sua URL!!
+token = "f94510c05f297c640315e7f392fff77f52e6bc17bcc37d938af3e9e894956abc"  # coloque o seu TOKEN de acesso!
 headers = {'Content-Type': 'application/json'}
 
-state    = sys.argv[1]
-hostname = sys.argv[2] # habilita e desabilitar o host
+state = sys.argv[1].lower()
+hostname = sys.argv[2]  # habilita e desabilitar o host
 
 def main():
-    hostid = hostid_get(token)
-    if sys.argv[1].lower() == 'disable':
-        event_dict,eventid_array = get_problems(hostid,token)
-        toggle_host(hostid,token)
-        close_problems(eventid_array, token)
-        print("Host " + hostid + " disabled")
-    elif sys.argv[1].lower() == 'enable':
-        toggle_host(hostid, token)
-        print("Host " + hostid + " enabled")
-    else:
-        print("Feito!")
-#    os.system('zabbix_server -R config_cache_reload')
+    try:
+        hostid = get_hostid(token, hostname)
+        if not hostid:
+            suggest_hosts(token, hostname)
+            return
 
-def hostid_get(token):
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'host.get'
-    payload['params'] = {}
-    payload['params']['output'] = ['hostid']
-    payload['params']['filter'] = {}
-    payload['params']['filter']['host'] = hostname
-    payload['auth'] = token
-    payload['id'] = 1
+        if state == 'disable':
+            event_dict, eventid_array = get_problems(hostid, token)
+            toggle_host(hostid, token, state)
+            close_problems(eventid_array, token)
+            print(f"Host {hostid} disabled")
+        elif state == 'enable':
+            toggle_host(hostid, token, state)
+            print(f"Host {hostid} enabled")
+        else:
+            print("Invalid state. Use 'enable' or 'disable'.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
+def get_hostid(token, hostname):
+    payload = {
+        'jsonrpc': '2.0',
+        'method': 'host.get',
+        'params': {
+            'output': ['hostid'],
+            'filter': {'host': hostname}
+        },
+        'auth': token,
+        'id': 1
+    }
 
-    #Doing the request
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-    data = request.json()
+    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    data = response.json()
 
-    hostid = data["result"][0]["hostid"]
-    return hostid
+    if data["result"]:
+        return data["result"][0]["hostid"]
+    return None
 
-def get_problems(hostid,token):
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'problem.get'
-    payload['params'] = {}
-    payload['params']['output'] = ['eventid','name','severity']
-    payload['params']['hostids'] = hostid
-    payload['params']['sortfield'] = ['eventid']
-    payload['params']['sortorder'] = "DESC"
-    payload['params']['filter'] = {}
-    payload['params']['filter']['r_eventid'] = "0"
-    payload['auth'] = token
-    payload['id'] = 1
+def get_problems(hostid, token):
+    payload = {
+        'jsonrpc': '2.0',
+        'method': 'problem.get',
+        'params': {
+            'output': ['eventid', 'name', 'severity'],
+            'hostids': hostid,
+            'sortfield': ['eventid'],
+            'sortorder': "DESC",
+            'filter': {'r_eventid': "0"}
+        },
+        'auth': token,
+        'id': 1
+    }
 
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-    data = request.json()
+    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    data = response.json()
 
-    eventid_array = []
-    for eventid in data["result"]:
-            eventid_array.append(str(eventid["eventid"]))
-
-    event_dict = {}
-    for x in data["result"]:
-        event_dict[x["eventid"]] = {}
-        event_dict[x["eventid"]]['name'] = x["name"]
-        event_dict[x["eventid"]]['name'] = x["name"]
-        event_dict[x["eventid"]]['severity'] = x["severity"]
+    eventid_array = [str(event["eventid"]) for event in data["result"]]
+    event_dict = {event["eventid"]: {'name': event["name"], 'severity': event["severity"]} for event in data["result"]}
     return event_dict, eventid_array
 
+def toggle_host(hostid, token, state):
+    set_status = '1' if state == 'disable' else '0'
 
-def toggle_host(hostid, token):
-    if sys.argv[1].lower() == 'disable':
-        set_status = '1'
-    elif sys.argv[1].lower() == 'enable':
-        set_status = '0'
+    payload = {
+        'jsonrpc': '2.0',
+        'method': 'host.update',
+        'params': {
+            'hostid': hostid,
+            'status': set_status
+        },
+        'auth': token,
+        'id': 1
+    }
 
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'host.update'
-    payload['params'] = {}
-    payload['params']['hostid'] = hostid
-    payload['params']['status'] = set_status
-    payload['auth'] = token
-    payload['id'] = 1
+    requests.post(url, data=json.dumps(payload), headers=headers)
 
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
+def close_problems(eventid_array, token):
+    payload = {
+        'jsonrpc': '2.0',
+        'method': 'event.acknowledge',
+        'params': {
+            'eventids': eventid_array,
+            'action': '1'
+        },
+        'auth': token,
+        'id': 1
+    }
 
-def close_problems(eventid_array,token):
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'event.acknowledge'
-    payload['params'] = {}
-    payload['params']['eventids'] = eventid_array
-    payload['params']['action'] = '1'
-    payload['auth'] = token
-    payload['id'] = 1
+    requests.post(url, data=json.dumps(payload), headers=headers)
 
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
+def suggest_hosts(token, partial_hostname):
+    payload = {
+        'jsonrpc': '2.0',
+        'method': 'host.get',
+        'params': {
+            'output': ['host'],
+            'search': {'host': partial_hostname},
+            'limit': 10
+        },
+        'auth': token,
+        'id': 1
+    }
+
+    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    data = response.json()
+
+    if data["result"]:
+        print("Host not found. Did you mean one of these?")
+        for host in data["result"]:
+            print(f"- {host['host']}")
+    else:
+        print("No similar hosts found.")
 
 if __name__ == '__main__':
-    # Call to main
     main()
