@@ -1,6 +1,6 @@
 #!/bin/bash
 # Modificado por Vitor Mazuco -
-# Esse código foi publicado originalmete em 2013 pelo https://www.taringa.net/+linux/monitorear-apache-con-zabbix_130wt9
+# Esse código foi publicado originalmete em 2013 pelo https://web.archive.org/web/20200421151423/https://www.taringa.net/+linux/monitorear-apache-con-zabbix_130wt9
 #      Alterado em 2014: https://github.com/SpawW/zabbix-templates/blob/master/100%20-%20Linux/101_Apache_Performance/zapache.sh
 #      e em 2016 https://github.com/janssenlima/scripts-zabbix/blob/master/apache/apache.sh                                                                  
 # Data da última atualizacao: 
