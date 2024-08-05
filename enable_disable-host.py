@@ -3,7 +3,7 @@
 #
 # Autor original: Opensource ICT Solutions B.V - license by GPL-3.0 
 # Alteração feita por Vitor Mazuco
-# 
+# https://github.com/Mazuco/Zabbix/blob/master/enable_disable-host.py
 #
 # 05-08-2024
 
