@@ -53,5 +53,5 @@ echo ']}'
 IFS=$OldIFS
 
 # Esse código foi publicado originalmete em: 
-# https://zabbix.org/wiki/Discovery_of_TCP_services
+# https://web.archive.org/web/20160911090200/http://zabbix.org/wiki/Discovery_of_TCP_services
 # https://zabbix.org/mw/images/c/c3/Tcp-service-discovery.sh
