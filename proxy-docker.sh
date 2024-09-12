@@ -76,10 +76,6 @@ services:
       - ZBX_UNREACHABLEDELAY=10
       - ZBX_LOGSLOWQUERIES=3000
       - ZBX_STATSALLOWEDIP=127.0.0.1
-      - ZBX_TLSCONNECT=psk
-      - ZBX_TLSACCEPT=psk
-      - ZBX_TLSPSKIDENTITY=proxy01 #NOME DO SEU PROXY
-      - ZBX_TLSPSKFILE=zabbix_proxy.psk
     restart: always
     network_mode: host
     volumes:
