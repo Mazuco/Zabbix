@@ -60,8 +60,6 @@ setup_base_and_mariadb_repo() {
     debian|ubuntu)
       apt update
       apt install -y wget lsb-release gnupg apache2 software-properties-common dirmngr ca-certificates apt-transport-https curl locales
-      echo 'en_US.UTF-8 UTF-8' | tee -a /etc/locale.gen
-      locale-gen
 
       curl -fsSL https://mariadb.org/mariadb_release_signing_key.asc \
         | gpg --dearmor | tee /usr/share/keyrings/mariadb.gpg > /dev/null
@@ -69,6 +67,8 @@ setup_base_and_mariadb_repo() {
       if [[ "$OS_ID" == "ubuntu" ]]; then
         echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/ $(lsb_release -cs) main" \
           > /etc/apt/sources.list.d/mariadb.list
+        echo 'en_US.UTF-8 UTF-8' | tee -a /etc/locale.gen
+        locale-gen
       else
         echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/ $(lsb_release -cs) main" \
           > /etc/apt/sources.list.d/mariadb.list
