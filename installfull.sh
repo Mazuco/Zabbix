@@ -2,59 +2,59 @@
 set -euo pipefail
 
 # ===============================
-# Zabbix 7.0 LTS (Server + Agent) All‑in‑One
-# SOs suportados neste script: Debian 11/12, Ubuntu 22.04/24.04, RHEL/Rocky 9/10
-# Banco de dados: MariaDB v10 (repositório oficial mirror.mariadb.org)
-# Servidor Web: Apache
+# Zabbix 7.0 LTS (Server + Agent) All-in-One
+# Supported OSes in this script: Debian 11/12, Ubuntu 22.04/24.04, RHEL/Rocky 9/10
+# Database: MariaDB v10 (official repository mirror.mariadb.org)
+# Web server: Apache
 # ===============================
 
 require_root() {
   if [[ $EUID -ne 0 ]]; then
-    echo "[ERRO] Execute este script como root." >&2
+    echo "[ERROR] Run this script as root." >&2
     exit 1
   fi
 }
 
-# Detecta distribuição (ID) e versão (VERSION_ID)
+# Detects distribution (ID) and version (VERSION_ID)
 detect_distro() {
   if [[ -f /etc/os-release ]]; then
     . /etc/os-release
-    OS_ID="${ID,,}"  # força lowercase
+    OS_ID="${ID,,}"  # lowercase force
 
-    # Normaliza: rocky-linux -> rocky
+    # rocky-linux -> rocky
     if [[ "$OS_ID" == "rocky-linux" ]]; then
       OS_ID="rocky"
     fi
 
-    OS_VERSION_ID="${VERSION_ID%%.*}"  # pega só a parte antes do ponto, ex: 10.0 -> 10
+    OS_VERSION_ID="${VERSION_ID%%.*}"  # takes only the part before the period, ex: 10.0 -> 10
   else
-    echo "[ERRO] Não foi possível detectar o sistema operacional." >&2
+    echo "[ERROR] Unable to detect operating system." >&2
     exit 1
   fi
 }
 
-# Garante que apenas distros suportadas prossigam
+# Ensures only supported distros proceed
 check_supported() {
   case "$OS_ID" in
     debian)
-      [[ "$OS_VERSION_ID" =~ ^(11|12)$ ]] || { echo "[ERRO] Apenas Debian 11 e 12 são suportados aqui." >&2; exit 1; }
+      [[ "$OS_VERSION_ID" =~ ^(11|12)$ ]] || { echo "[ERRO] Only Debian 11 and 12 are supported here." >&2; exit 1; }
       ;;
     ubuntu)
-      [[ "$OS_VERSION_ID" =~ ^(22|24)$ ]] || { echo "[ERRO] Apenas Ubuntu 22.04 e 24.04 são suportados aqui." >&2; exit 1; }
+      [[ "$OS_VERSION_ID" =~ ^(22|24)$ ]] || { echo "[ERRO] Only Ubuntu 22.04 and 24.04 are supported here." >&2; exit 1; }
       ;;
     rocky|rhel)
-      [[ "$OS_VERSION_ID" =~ ^(9|10)$ ]] || { echo "[ERRO] Apenas RHEL/Rocky 9 e 10 são suportados aqui." >&2; exit 1; }
+      [[ "$OS_VERSION_ID" =~ ^(9|10)$ ]] || { echo "[ERRO] Only RHEL/Rocky 9 and 10 are supported here." >&2; exit 1; }
       ;;
     *)
-      echo "[ERRO] Sistema não suportado. Use Debian 11/12, Ubuntu 22.04/24.04, ou RHEL/Rocky 9/10." >&2
+      echo "[ERRO] Unsupported system. Use Debian 11/12, Ubuntu 22.04/24.04, or RHEL/Rocky 9/10." >&2
       exit 1
       ;;
   esac
 }
 
-# Pacotes base e repositório do MariaDB 10.11
+# MariaDB 10 base packages and repository
 setup_base_and_mariadb_repo() {
-  echo "[INFO] Instalando pré‑requisitos e adicionando repositório do MariaDB 10.11..."
+  echo "[INFO] Installing prerequisites and adding MariaDB 10 repository..."
 
   case "$OS_ID" in
     debian|ubuntu)
@@ -91,9 +91,9 @@ setup_base_and_mariadb_repo() {
   systemctl enable --now mariadb || true
 }
 
-# Configura repositório do Zabbix 7.0 conforme sistema
+# Configure Zabbix 7.0 repository according to system
 setup_zabbix_repo() {
-  echo "[INFO] Configurando repositório oficial do Zabbix 7.0..."
+  echo "[INFO] Setting up the official Zabbix 7.0 repository..."
   local base_url pkg
 
   case "$OS_ID" in
@@ -118,16 +118,16 @@ setup_zabbix_repo() {
       ;;
   esac
 
-  echo "[INFO] Baixando $pkg ..."
+  echo "[INFO] Downloading $pkg ..."
   rm -f /tmp/zabbix-release*.deb
   wget -qO "/tmp/$pkg" "$base_url/$pkg"
   dpkg -i "/tmp/$pkg"
   apt update
 }
 
-# Instala servidor + frontend + agent e pré‑requisitos PHP via meta do pacote
+# Install server + frontend + agent and PHP prerequisites via package meta
 install_zabbix_packages() {
-  echo "[INFO] Instalando pacotes Zabbix..."
+  echo "[INFO] Installing Zabbix packages..."
 
   case "$OS_ID" in
     debian|ubuntu)
@@ -140,9 +140,9 @@ install_zabbix_packages() {
   esac
 }
 
-# Cria base, usuário e importa esquema inicial
+# Creates base, user and imports initial schema
 setup_db_schema() {
-  echo "[INFO] Criando base 'zabbix' e usuário 'zabbix'..."
+  echo "[INFO] Creating base 'zabbix' and user 'zabbix'..."
   mariadb -uroot <<SQL
 CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 CREATE USER IF NOT EXISTS 'zabbix'@'localhost' IDENTIFIED BY 'zabbix123';
@@ -150,13 +150,13 @@ GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
 FLUSH PRIVILEGES;
 SQL
 
-  echo "[INFO] Importando esquema inicial... (pode levar alguns minutos)"
+  echo "[INFO] Importing initial schema... (may take a few minutes)"
   zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mariadb -uzabbix -pzabbix123 zabbix
 }
 
-# Ajusta configuração do Zabbix Server e timezone do Apache
+# Adjust Zabbix Server configuration and Apache timezone
 final_tuning() {
-  echo "[INFO] Ajustando configuração do Zabbix e Apache..."
+  echo "[INFO] Adjusting Zabbix and Apache configuration..."
 
   sed -i \
     -e "s/^#\?\s*DBUser=.*/DBUser=zabbix/" \
@@ -187,11 +187,11 @@ final_tuning() {
 print_summary() {
   echo ""
   echo "==============================================="
-  echo "Instalação concluída!"
-  echo "Acesse o frontend: http://<IP_DO_SERVIDOR>/zabbix"
-  echo "Login padrão: Admin / zabbix"
-  echo "Banco: MariaDB v10  |  DB: zabbix  |  User: zabbix  |  Senha: zabbix123"
-  echo "(Altere as senhas em produção.)"
+  echo "Installation complete!"
+  echo "Access the frontend: http://<IP_DO_SERVIDOR>/zabbix"
+  echo "Default login: Admin / zabbix"
+  echo "Database: MariaDB v10  |  DB: zabbix  |  User: zabbix  |  Password: zabbix123"
+  echo "(Change passwords in production.)"
   echo "==============================================="
 }
 
