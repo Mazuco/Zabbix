@@ -56,9 +56,9 @@ install_on_debian_ubuntu() {
   # Adicionar repositórios MariaDB 10.11
   wget -O /usr/share/keyrings/mariadb.gpg https://mariadb.org/mariadb_release_signing_key.asc
   if [[ "$OS_ID" == "ubuntu" ]]; then
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
   else
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
   fi
 
   apt update
