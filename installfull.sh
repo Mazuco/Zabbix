@@ -107,8 +107,9 @@ setup_zabbix_repo() {
     ubuntu)
       base_url="https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release"
       case "$OS_VERSION_ID" in
-        22.04) pkg="zabbix-release_latest_7.0+ubuntu22.04_all.deb" ;;
-        24.04) pkg="zabbix-release_latest_7.0+ubuntu24.04_all.deb" ;;
+        22) pkg="zabbix-release_latest_7.0+ubuntu22.04_all.deb" ;;
+        24) pkg="zabbix-release_latest_7.0+ubuntu24.04_all.deb" ;;
+        *) echo "[ERRO] Ubuntu $OS_VERSION_ID não suportado."; exit 1 ;;
       esac
       ;;
     rocky|rhel)
