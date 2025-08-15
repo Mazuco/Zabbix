@@ -72,6 +72,9 @@ setup_base_and_mariadb_repo() {
       else
         echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/ $(lsb_release -cs) main" \
           > /etc/apt/sources.list.d/mariadb.list
+        export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
+        locale-gen
       fi
 
       apt update
