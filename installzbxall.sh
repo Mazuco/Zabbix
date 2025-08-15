@@ -28,12 +28,12 @@ check_supported() {
       fi
       ;;
     rhel)
-      if [[ "$OS_VERSION_ID" == "9" || "$OS_VERSION_ID" == "10" ]]; then
+      if [[ "$OS_VERSION_ID" == "9" || "$OS_VERSION_ID" == "10.0" ]]; then
         return 0
       fi
       ;;
     rocky)
-      if [[ "$OS_VERSION_ID" == "9" || "$OS_VERSION_ID" == "10" ]]; then
+      if [[ "$OS_VERSION_ID" == "9" || "$OS_VERSION_ID" == "10.0" ]]; then
         return 0
       fi
       ;;
@@ -53,10 +53,13 @@ install_on_debian_ubuntu() {
   apt update
   apt install -y wget lsb-release gnupg apache2 software-properties-common
 
-  # Add MariaDB 11 repositories
-  wget -O /etc/apt/trusted.gpg.d/mariadb.gpg https://mariadb.org/mariadb_release_signing_key.asc
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mariadb.gpg] http://mirror.nordcoders.com/mariadb/repo/11.0/$(lsb_release -sc) main" \
-    > /etc/apt/sources.list.d/mariadb.list
+  # Adicionar repositórios MariaDB 10.11
+  wget -O /usr/share/keyrings/mariadb.gpg https://mariadb.org/mariadb_release_signing_key.asc
+  if [[ "$OS_ID" == "ubuntu" ]]; then
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/mariadb.list
+  else
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/mariadb.list
+  fi
 
   apt update
   DEBIAN_FRONTEND=noninteractive apt install -y mariadb-server mariadb-client
