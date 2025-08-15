@@ -50,16 +50,15 @@ check_supported() {
 
 install_on_debian_ubuntu() {
   apt update
-  apt install -y wget lsb-release gnupg apache2 software-properties-common
+  apt install -y wget lsb-release gnupg apache2 software-properties-common dirmngr ca-certificates software-properties-common apt-transport-https curl -y
 
   # Adicionar repositórios MariaDB 10.11
-  wget -O /usr/share/keyrings/mariadb.gpg https://mariadb.org/mariadb_release_signing_key.asc
-  MARIADB_CODENAME=$(map_mariadb_codename)
+  curl -fsSL https://mariadb.org/mariadb_release_signing_key.asc | sudo gpg --dearmor | sudo tee /usr/share/keyrings/mariadb.gpg > /dev/null
 
   if [[ "$OS_ID" == "ubuntu" ]]; then
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu $MARIADB_CODENAME main" | tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
   else
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian $MARIADB_CODENAME main" | tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
   fi
 
   apt update
