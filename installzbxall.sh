@@ -49,29 +49,28 @@ check_supported() {
 }
 
 install_on_debian_ubuntu() {
-  echo "Installing on Debian/Ubuntu..."
   apt update
   apt install -y wget lsb-release gnupg apache2 software-properties-common
 
   # Adicionar repositórios MariaDB 10.11
   wget -O /usr/share/keyrings/mariadb.gpg https://mariadb.org/mariadb_release_signing_key.asc
+  MARIADB_CODENAME=$(map_mariadb_codename)
+
   if [[ "$OS_ID" == "ubuntu" ]]; then
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu/$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/ubuntu $MARIADB_CODENAME main" | tee /etc/apt/sources.list.d/mariadb.list
   else
-    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian/$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mariadb.list
+    echo "deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/mariadb.gpg] http://mirror.mariadb.org/repo/10.11/debian $MARIADB_CODENAME main" | tee /etc/apt/sources.list.d/mariadb.list
   fi
 
   apt update
   DEBIAN_FRONTEND=noninteractive apt install -y mariadb-server mariadb-client
 
-  # Add Zabbix 7.0 LTS repository
+  # Adicionar repositório Zabbix 7.0 LTS
   wget -qO /etc/apt/trusted.gpg.d/zabbix.gpg https://repo.zabbix.com/zabbix-official-repo.key
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/zabbix.gpg] https://repo.zabbix.com/zabbix/7.0/$(lsb_release -sc) main" \
-    > /etc/apt/sources.list.d/zabbix.list
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/zabbix.gpg] https://repo.zabbix.com/zabbix/7.0/$(lsb_release -sc) main" > /etc/apt/sources.list.d/zabbix.list
 
   apt update
   DEBIAN_FRONTEND=noninteractive apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent
-
   systemctl enable --now apache2 zabbix-server zabbix-agent mariadb
 }
 
