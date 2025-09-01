@@ -10,9 +10,9 @@ TOTAL_UPDATES=$(dnf check-update --quiet | grep -cE '^[a-zA-Z0-9]')
 DATE_RUN=$(date +%s)
 
 # Saída no formato esperado pelo zabbix_sender
-echo "- yum.updates.total[$ZABBIX_HOST] $TOTAL_UPDATES"
-echo "- yum.updates.security[$ZABBIX_HOST] $SECURITY_UPDATES"
-echo "- yum.updates.lastcheck[$ZABBIX_HOST] $DATE_RUN"
+echo "- dnf.updates.total[$ZABBIX_HOST] $TOTAL_UPDATES"
+echo "- dnf.updates.security[$ZABBIX_HOST] $SECURITY_UPDATES"
+echo "- dnf.updates.lastcheck[$ZABBIX_HOST] $DATE_RUN"
 
 
 
