@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>7.0</version>
+    <date>2025-09-01T12:00:00Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <uuid>f3a57d0e-7c8f-4f1f-b2b8-94e4e6c9a999</uuid>
+            <template>Template App YUM Updates</template>
+            <name>Template App YUM Updates</name>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>0a83b4f0-64b3-4a62-b92a-1e7f1234abcd</uuid>
+                    <name>Total YUM Updates</name>
+                    <key>yum.updates.total[{HOST.HOST}]</key>
+                    <type>ZABBIX_ACTIVE</type>
+                    <value_type>numeric_unsigned</value_type>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <description>Total number of available YUM updates.</description>
+                </item>
+                <item>
+                    <uuid>1b95c520-5e6d-44d4-a35c-7a7f5678efgh</uuid>
+                    <name>Security YUM Updates</name>
+                    <key>yum.updates.security[{HOST.HOST}]</key>
+                    <type>ZABBIX_ACTIVE</type>
+                    <value_type>numeric_unsigned</value_type>
+                    <history>90d</history>
+                    <trends>365d</trends>
+                    <description>Number of security updates available via YUM.</description>
+                </item>
+                <item>
+                    <uuid>2c12d830-8f7d-47f1-b932-9b3f9012ijkl</uuid>
+                    <name>Last YUM Check</name>
+                    <key>yum.updates.lastcheck[{HOST.HOST}]</key>
+                    <type>ZABBIX_ACTIVE</type>
+                    <value_type>numeric_unsigned</value_type>
+                    <units>unixtime</units>
+                    <history>30d</history>
+                    <trends>0</trends>
+                    <description>Timestamp of last YUM check.</description>
+                </item>
+            </items>
+            <triggers>
+                <trigger>
+                    <uuid>3d83f640-11a2-47e2-bc5f-aaa9b567mnop</uuid>
+                    <expression>{Template App YUM Updates:yum.updates.security[{HOST.HOST}].last()}&gt;0</expression>
+                    <name>Security updates available on {HOST.HOST}</name>
+                    <priority>high</priority>
+                    <description>There are pending security updates available on this host.</description>
+                </trigger>
+                <trigger>
+                    <uuid>4e93f770-25b3-44f1-a8df-cccde123qrst</uuid>
+                    <expression>{Template App YUM Updates:yum.updates.total[{HOST.HOST}].last()}&gt;0</expression>
+                    <name>Updates available on {HOST.HOST}</name>
+                    <priority>warning</priority>
+                    <description>There are general updates available on this host.</description>
+                </trigger>
+            </triggers>
+        </template>
+    </templates>
+</zabbix_export>
+
