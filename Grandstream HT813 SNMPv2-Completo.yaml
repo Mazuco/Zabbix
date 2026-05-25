@@ -1,0 +1,520 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 189166bd0b174fe592aeb603c2cc4ee8
+      template: 'Grandstream HT813 SNMPv2-Completo'
+      name: 'Grandstream HT813 SNMPv2-Completo'
+      description: |
+        ## Description
+
+        Monitoramento completo via SNMPv2 para o ATA Grandstream HT813.
+        Cobre status FXS/FXO, contadores de chamadas, versões de firmware dos
+        subsistemas, informações do sistema Linux e contadores SNMP.
+
+        Certifique-se de que o SNMPv2 está habilitado no equipamento.
+
+        ## Author
+
+        Alexander Zverev (original) — expandido com MIB privada completa e itens de sistema
+      groups:
+        - name: Templates
+
+      items:
+
+        # ═══════════════════════════════════════════════════════
+        # INFORMAÇÕES DO DISPOSITIVO
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: b47a9f42b7424b6dbf59c9ce876b2662
+          name: 'Device MAC/Serial'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.1.0.0
+          key: device.mac
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Identificador único do dispositivo (MAC sem separadores)'
+          tags:
+            - tag: Application
+              value: Device Info
+
+        - uuid: e747e3d18df44677af2b4dc7eaf8e2a8
+          name: 'System Description'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.1.0
+          key: system.descr
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Descrição do sistema operacional e versão do kernel Linux'
+          tags:
+            - tag: Application
+              value: Device Info
+
+        - uuid: 1de97154cfe04b3bb7e0d718e4d105ba
+          name: 'System Name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.5.0
+          key: system.name
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Hostname configurado no gateway'
+          tags:
+            - tag: Application
+              value: Device Info
+
+        - uuid: bd1c5e7c31e049f2a40fb23e43cb62a8
+          name: 'System Location'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.6.0
+          key: system.location
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Localização física configurada no dispositivo'
+          tags:
+            - tag: Application
+              value: Device Info
+
+        - uuid: 9d538e64f3b64deaab5fc7de3f0874d8
+          name: 'System Contact'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.4.0
+          key: system.contact
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Contato administrativo configurado no dispositivo'
+          tags:
+            - tag: Application
+              value: Device Info
+
+        # ═══════════════════════════════════════════════════════
+        # VERSÕES DE FIRMWARE DOS SUBSISTEMAS
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: 68c6cc0e63ae47e4833d7237988aeeb8
+          name: 'Firmware FXS Core Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.3.1.0.0
+          key: firmware.fxs.core
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Versão do firmware do núcleo DSP da porta FXS (ex: 1.0.17.1)'
+          tags:
+            - tag: Application
+              value: Firmware
+          triggers:
+            - uuid: 8d8be8344ee54710843b6b43351f6b80
+              expression: 'change(/Grandstream HT813 SNMPv2/firmware.fxs.core)<>0'
+              name: 'Firmware FXS Core foi atualizado'
+              priority: INFO
+              description: 'A versão do firmware do subsistema FXS foi alterada'
+              manual_close: 'YES'
+
+        - uuid: 964198fde1d94db1aceac8a312b0edc8
+          name: 'Firmware FXS Base Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.3.2.0.0
+          key: firmware.fxs.base
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Versão do firmware base da porta FXS (ex: 1.0.17.1)'
+          tags:
+            - tag: Application
+              value: Firmware
+
+        - uuid: ef48f564090b45b5a889c0f62878d21a
+          name: 'Firmware FXO Core Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.3.3.0.0
+          key: firmware.fxo.core
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Versão do firmware do núcleo DSP da porta FXO (ex: 1.0.17.3)'
+          tags:
+            - tag: Application
+              value: Firmware
+          triggers:
+            - uuid: 5e98c43118b24c98b2df606aa8ea9be1
+              expression: 'change(/Grandstream HT813 SNMPv2/firmware.fxo.core)<>0'
+              name: 'Firmware FXO Core foi atualizado'
+              priority: INFO
+              description: 'A versão do firmware do subsistema FXO foi alterada'
+              manual_close: 'YES'
+
+        - uuid: 3384c41e85d747dd8ee0dd4455009945
+          name: 'Firmware FXO Base Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.3.4.0.0
+          key: firmware.fxo.base
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Versão do firmware base da porta FXO (ex: 1.0.17.3)'
+          tags:
+            - tag: Application
+              value: Firmware
+
+        # ═══════════════════════════════════════════════════════
+        # STATUS DAS PORTAS FXS / FXO
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: 059a01b90fa24398a87c23a561698ec5
+          name: 'FXS Hook Status'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.1.1.0.0
+          key: fxs.hook
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Estado físico do ramal FXS: On Hook / Off Hook / Not Connected'
+          tags:
+            - tag: Application
+              value: Interfaces
+          triggers:
+            - uuid: 0570179382594045b130eb9267e6ca43
+              expression: 'last(/Grandstream HT813 SNMPv2/fxs.hook)="Not Connected"'
+              name: 'FXS: telefone analógico desconectado'
+              priority: HIGH
+              description: 'Nenhum terminal analógico detectado na porta FXS'
+
+        - uuid: 81aaa6a87cd14dc3be541e5284147ba3
+          name: 'FXS Registry Status'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.2.1.0.0
+          key: fxs.registry
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Status de registro SIP da porta FXS: Registered / Unregistered / Registering'
+          tags:
+            - tag: Application
+              value: Interfaces
+          triggers:
+            - uuid: e2fe97b1c1d647f6807a8ac7992cab57
+              expression: 'last(/Grandstream HT813 SNMPv2/fxs.registry)<>"Registered"'
+              name: 'FXS: não registrado no servidor SIP'
+              priority: HIGH
+              manual_close: 'YES'
+
+        - uuid: 3421a69ac3884105b4d0ccea2968afca
+          name: 'FXO Hook Status'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.1.2.0.0
+          key: fxo.hook
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Estado físico da porta FXO: On Hook / Off Hook / Not Connected'
+          tags:
+            - tag: Application
+              value: Interfaces
+          triggers:
+            - uuid: 234292bac68845fa8e1b10a8507c8037
+              expression: 'last(/Grandstream HT813 SNMPv2/fxo.hook)="Not Connected"'
+              name: 'FXO: linha PSTN desconectada'
+              priority: HIGH
+              manual_close: 'YES'
+              description: 'Linha PSTN não detectada na porta FXO'
+
+        - uuid: a24c782579fe4e18be2fbf5f163328b2
+          name: 'FXO Registry Status'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.2.2.0.0
+          key: fxo.registry
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'Status de registro SIP da porta FXO: Registered / Unregistered / Registering'
+          tags:
+            - tag: Application
+              value: Interfaces
+          triggers:
+            - uuid: 359edc830627455392b3e0d9228c3df7
+              expression: 'last(/Grandstream HT813 SNMPv2/fxo.registry)<>"Registered"'
+              name: 'FXO: não registrado no servidor SIP'
+              priority: HIGH
+
+        # ═══════════════════════════════════════════════════════
+        # CONTADORES DE CHAMADAS  (.42397.1.2.2.3.x)
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: e0e497cd4cfe4022ab3a0ccc745e4aa4
+          name: 'FXS Active Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.1.0.0
+          key: fxs.calls.active
+          history: 30d
+          trends: 90d
+          description: 'Número de chamadas ativas na porta FXS no momento'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        - uuid: 6f7a994033a4409bb4fb6675cdc6e66f
+          name: 'FXO Active Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.2.0.0
+          key: fxo.calls.active
+          history: 30d
+          trends: 90d
+          description: 'Número de chamadas ativas na porta FXO no momento'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        - uuid: e4fd1d85e8ae46078e1edb497b47237d
+          name: 'FXS Total Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.3.0.0
+          key: fxs.calls.total
+          history: 30d
+          trends: 90d
+          description: 'Total de chamadas realizadas na porta FXS desde o último reboot'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        - uuid: 1d2ab27b862d424392aa53b73bd1a2e6
+          name: 'FXO Total Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.4.0.0
+          key: fxo.calls.total
+          history: 30d
+          trends: 90d
+          description: 'Total de chamadas realizadas na porta FXO desde o último reboot'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        - uuid: 10b3a62740b1441fa67f657b7c59885e
+          name: 'FXS Failed Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.5.0.0
+          key: fxs.calls.failed
+          history: 30d
+          trends: 90d
+          description: 'Total de chamadas com falha na porta FXS desde o último reboot'
+          tags:
+            - tag: Application
+              value: Call Stats
+          triggers:
+            - uuid: b58adafdf2b1438f87d9073c3440913c
+              expression: 'change(/Grandstream HT813 SNMPv2/fxs.calls.failed)>5'
+              name: 'FXS: aumento de chamadas com falha'
+              priority: WARNING
+              description: 'Contador de falhas FXS aumentou mais de 5 em um ciclo de coleta'
+
+        - uuid: 8c43598eae23488b92a366dfea3e1a53
+          name: 'FXO Failed Calls'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.6.0.0
+          key: fxo.calls.failed
+          history: 30d
+          trends: 90d
+          description: 'Total de chamadas com falha na porta FXO desde o último reboot'
+          tags:
+            - tag: Application
+              value: Call Stats
+          triggers:
+            - uuid: ed2bf114d2af43f8a8dccecafd59b6f7
+              expression: 'change(/Grandstream HT813 SNMPv2/fxo.calls.failed)>5'
+              name: 'FXO: aumento de chamadas com falha'
+              priority: WARNING
+              description: 'Contador de falhas FXO aumentou mais de 5 em um ciclo de coleta'
+
+        - uuid: bbab0dc0297648f1ac0bbf4af6f9806a
+          name: 'Counter 3.7 (unknown)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.7.0.0
+          key: grandstream.counter.3.7
+          history: 30d
+          trends: 90d
+          description: 'Contador privado Grandstream — função a confirmar com MIB oficial'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        - uuid: 4b1897bda33140f58ab40ec1169fe6d9
+          name: 'Counter 3.8 (unknown)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.2.3.8.0.0
+          key: grandstream.counter.3.8
+          history: 30d
+          trends: 90d
+          description: 'Contador privado Grandstream — função a confirmar com MIB oficial'
+          tags:
+            - tag: Application
+              value: Call Stats
+
+        # ═══════════════════════════════════════════════════════
+        # PARÂMETROS DE LINHA (.42397.1.2.4.x)
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: a3b8165a9eca4ea8a1c774058130c654
+          name: 'Line Parameter 4.1'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.4.1.0.0
+          key: grandstream.param.4.1
+          delay: 5m
+          history: 30d
+          trends: 90d
+          description: 'Parâmetro de linha Grandstream — possivelmente estado da linha ou codec ativo FXS (observado: 1)'
+          tags:
+            - tag: Application
+              value: Line Params
+
+        - uuid: 5202e76193444133a4d588fa12c2239d
+          name: 'Line Parameter 4.2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.4.2.0.0
+          key: grandstream.param.4.2
+          delay: 5m
+          history: 30d
+          trends: 90d
+          description: 'Parâmetro de linha Grandstream (observado: 0)'
+          tags:
+            - tag: Application
+              value: Line Params
+
+        - uuid: d673d709f0e741b1b9ef9d13fed558b3
+          name: 'Line Parameter 4.3'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.4.3.0.0
+          key: grandstream.param.4.3
+          delay: 5m
+          history: 30d
+          trends: 90d
+          description: 'Parâmetro de linha Grandstream (observado: 2)'
+          tags:
+            - tag: Application
+              value: Line Params
+
+        - uuid: 6ed4b54738ab49c7bf232bf10d543672
+          name: 'Line Parameter 4.4'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.42397.1.2.4.4.0.0
+          key: grandstream.param.4.4
+          delay: 5m
+          history: 30d
+          trends: 90d
+          description: 'Parâmetro de linha Grandstream (observado: 2)'
+          tags:
+            - tag: Application
+              value: Line Params
+
+        # ═══════════════════════════════════════════════════════
+        # UPTIME
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: eca2e48ce4184d5fad9153a634ecf84b
+          name: 'Uptime'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.3.0
+          key: gateway.uptime
+          history: 7d
+          trends: '0'
+          units: uptime
+          description: 'Tempo de operação contínua do gateway desde o último boot'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: Status
+          triggers:
+            - uuid: f4971a5a323548d6aeb44c540cca4969
+              expression: 'last(/Grandstream HT813 SNMPv2/gateway.uptime)<last(/Grandstream HT813 SNMPv2/gateway.uptime,#2)'
+              name: 'Gateway foi reiniciado'
+              priority: AVERAGE
+              description: 'O uptime diminuiu — provável reinício ou queda de energia'
+
+        # ═══════════════════════════════════════════════════════
+        # CONTADORES SNMP (segurança e saúde do agente)
+        # ═══════════════════════════════════════════════════════
+
+        - uuid: 1a567cb5df594a938c27954f33cc48af
+          name: 'SNMP Packets In (rate)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.11.1.0
+          key: snmp.in.pkts
+          history: 7d
+          trends: 30d
+          units: pps
+          description: 'Taxa de pacotes SNMP recebidos por segundo'
+          preprocessing:
+            - type: CHANGE_PER_SECOND
+              parameters: []
+          tags:
+            - tag: Application
+              value: SNMP Stats
+
+        - uuid: 8fd723f5365749ca9846ca552ba3bf8a
+          name: 'SNMP Packets Out (rate)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.11.2.0
+          key: snmp.out.pkts
+          history: 7d
+          trends: 30d
+          units: pps
+          description: 'Taxa de pacotes SNMP enviados por segundo'
+          preprocessing:
+            - type: CHANGE_PER_SECOND
+              parameters: []
+          tags:
+            - tag: Application
+              value: SNMP Stats
+
+        - uuid: dd7575d3280040339b221d4736fc082e
+          name: 'SNMP Bad Community Names (rate)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.11.4.0
+          key: snmp.in.bad.community.names
+          history: 7d
+          trends: 30d
+          description: 'Taxa de pacotes com community string inválida — alerta de segurança'
+          preprocessing:
+            - type: CHANGE_PER_SECOND
+              parameters: []
+          tags:
+            - tag: Application
+              value: SNMP Stats
+          triggers:
+            - uuid: 3f5f3ed25e8543299f976ae64058d0d8
+              expression: 'avg(/Grandstream HT813 SNMPv2/snmp.in.bad.community.names,5m)>0.1'
+              name: 'Tentativas de acesso SNMP com community inválida'
+              priority: WARNING
+              description: 'Possível varredura ou acesso não autorizado via SNMP'
+
+        - uuid: 9f4e5eedba4947b1bdc2bce50a5eb5e9
+          name: 'SNMP Bad Versions (rate)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.11.3.0
+          key: snmp.in.bad.versions
+          history: 7d
+          trends: 30d
+          description: 'Taxa de pacotes com versão SNMP incompatível'
+          preprocessing:
+            - type: CHANGE_PER_SECOND
+              parameters: []
+          tags:
+            - tag: Application
+              value: SNMP Stats
