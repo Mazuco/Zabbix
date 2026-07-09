@@ -87,7 +87,7 @@ flush privileges;
 exit
 EOF
 
-  zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz |mysql -uroot -p${MYSQL_PASSWD} zabbix;
+  zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz |mysql -uroot -p${MYSQL_PASSWD} zabbix;
 
   sudo sed -e 's/# ListenPort=.*/ListenPort=10051/g' \
        -e "s/# DBPassword=.*/DBPassword=${ZABBIX_PASSWD}/g" \
